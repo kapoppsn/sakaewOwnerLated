@@ -16,6 +16,10 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.navAll {
+  background-color: #61dafb;
+  font-weight: 100;
+}
 
 .App-link {
   color: #09d3ac;

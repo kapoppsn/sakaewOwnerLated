@@ -1,26 +1,68 @@
-import React from 'react';
+import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import firebase from './Firebase';
+import 'antd/dist/antd.css';
+import { Button } from 'antd';
 
-function App() {
-  return (
+
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.ref = firebase.firestore().collection('boards');
+    this.unsubscribe = null;
+    this.state = {
+      boards: []
+    };
+  }
+  onCollectionUpdate = (querySnapshot) => {
+    const boards = [];
+    querySnapshot.forEach((doc) => {
+      const { name, amount, size, format, color, page, statusOrder, rand } = doc.data();
+      boards.push({
+        key: doc.id,
+        doc, // DocumentSnapshot
+        name,
+        page,
+        amount,
+        size,
+        color,
+        format,
+        statusOrder,
+        rand
+      });
+    });
+    this.setState({
+      boards
+    });
+  }
+
+  componentDidMount() {
+    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+  }
+
+  render(){
+    const statusOrder = this.state.statusOrder;
+    let orderS;
+    if(!statusOrder){
+      orderS = this.state.boards.map(board =>
+      <Button type="primary" href={`/show/${board.key}`}>{board.rand}</Button>
+        )
+    }else{
+      orderS = this.state.boards.map(board =>
+        <Button disabled type="primary">{board.rand}</Button>
+        )
+      }
+    return (
+    
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+      {orderS}
+      </div>
     </div>
   );
+}
 }
 
 export default App;
