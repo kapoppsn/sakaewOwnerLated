@@ -46,14 +46,14 @@ class App extends Component {
     const statusOrder = this.state.statusOrder;
     let orderS;
     if(!statusOrder){
-      orderS = this.state.boards.map(board =>
-      <Button type="primary" href={`/show/${board.key}`}>{board.rand}</Button>
+      orderS=this.state.boards.map(board =>
+        <Button type="primary" href={`/show/${board.key}`}>{board.rand}</Button>
         )
     }else{
-      orderS = this.state.boards.map(board =>
+      orderS=this.state.boards.map(board =>
         <Button disabled type="primary">{board.rand}</Button>
         )
-      }
+    }    
     return (
     
     <div className="App">

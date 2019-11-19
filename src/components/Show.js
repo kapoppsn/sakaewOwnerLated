@@ -21,7 +21,7 @@ class Show extends Component {
       key: '',
       confirmS: false,
       finishS: false,
-      statusOrder: true,
+      statusOrder: '',
       key: '',
       name: '',
       page: '',
@@ -32,7 +32,10 @@ class Show extends Component {
       format: '',
       address: '',
       tel:'',
-      rand: ''
+      rand: '',
+      datePay: '',
+      timePay: '',
+      costPay: '',
     };
   }
   componentDidMount() {
@@ -54,6 +57,9 @@ class Show extends Component {
           address: board.address,
           rand: board.rand,
           statusOrder: board.statusOrder,
+          datePay: board.datePay,
+          timePay: board.timePay,
+          costPay: board.costPay,
           isLoading: false
         });
       } else {
@@ -62,9 +68,9 @@ class Show extends Component {
     });
   }
   onSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const {name, size, amount, format, color, page, page2, tel, address, rand, statusOrder } = this.state;
+    const {name, size, amount, format, color, page, page2, tel, address, rand, statusOrder, datePay,timePay ,costPay } = this.state;
 
     const updateRef = firebase.firestore().collection('boards').doc(this.state.key);
     updateRef.set({
@@ -78,7 +84,10 @@ class Show extends Component {
       tel,
       address,
       rand,
-      statusOrder
+      statusOrder,
+      datePay,
+      timePay,
+      costPay,
     }).then((docRef) => {
       this.setState({
         key: '',
@@ -92,9 +101,17 @@ class Show extends Component {
         address: '',
         tel:'',
         rand: '',
-        statusOrder: true
+        statusOrder: '',
+        datePay: '',
+        timePay: '',
+        costPay: '',
       });
       this.props.history.push("/show/"+this.props.match.params.id)
+      this.setState({
+        finishS: !this.state.finishS,
+        statusOrder: "0"
+    })
+    console.log("click");
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
@@ -113,7 +130,6 @@ class Show extends Component {
   toggleFinish() {
       this.setState({
         finishS: !this.state.finishS,
-        statusOrder: true
     })
     console.log("click");
   }
@@ -137,11 +153,11 @@ class Show extends Component {
       status1 = <Badge status="default" text="Waiting for confirm" />
       successBut = <Button onClick={this.toggleConfirm}>Confirm order</Button>
     }else if(confirmS){
-      status1 = <Badge status="processing" text="Doing the order" />
-      successBut = <Button type="primary"  onSubmit={this.onSubmit} onChange={this.onChange} onClick={this.toggleFinish}>Finish order</Button>
+      status1 = <Badge status="processing" text="Doing the order" name="statusOrder" value={statusOrder} onChange={this.onSubmit}   onChange={this.onChange}/>
+      successBut = <div class="form-group"><button type="submit"  name="statusOrder" value={statusOrder} onClick={this.onSubmit}  onChange={this.onChange}>Finish order</button></div>
       if(finishS){
         status1 = <Badge status="success" text="Finish order!" />
-        successBut = <Button disabled type="primary">Finish order</Button>
+      successBut = <Button disabled type="primary">Finish order {statusOrder}</Button>
       }
     }
     
