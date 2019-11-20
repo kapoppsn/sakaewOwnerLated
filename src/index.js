@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import Show from './components/Show';
+import EditStatus from './components/EditStatus';
 import App from './App';
 
 ReactDOM.render(
@@ -11,7 +12,7 @@ ReactDOM.render(
       <div>
         <Route exact path='/' component={App} />
         <Route path='/show/:id' component={Show}/>
-
+        <Route path='/editstatus/:id' component={EditStatus} />
       </div>
   </Router>,
   document.getElementById('root')

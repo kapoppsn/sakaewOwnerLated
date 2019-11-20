@@ -1,0 +1,22 @@
+.bgEdit{
+    background-image: url("../image/bgList.png");
+    height: 873px;
+    width: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -ms-background-size: cover;
+}
+#con{
+    position: absolute;
+    top: 27%;
+    left: 27%;
+    font-family: FC Lamoon;
+    font-size: 30px;
+    background-color: white;
+    padding: 90px 80px;
+    border-radius: 30%;
+    box-shadow: 8px 8px 8px rgb(219, 206, 196);
+}

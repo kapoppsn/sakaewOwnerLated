@@ -1,0 +1,34 @@
+.bg{
+    background-image: url("../image/bgList.png");
+    height: 873px;
+    width: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -ms-background-size: cover;
+}
+#table{
+    width: 70%;
+    transform: translate(23%, 50%);
+    -webkit-transform: translate(23%, 50%);
+    -ms-transform: translate(-50%, -50%);
+    font-weight: bolder;
+    border: 4px double #CFBCA6 ;
+    font-family: 'Rock Salt', cursive;
+}
+#btCon{
+    position: absolute;
+    top: 85%;
+    left: 35%;
+    font-family: FC Lamoon;
+    font-size: 22px;
+    width: 40%;
+    color: rgb(107, 96, 93) ;
+}
+#edit{
+    font-family: FC Lamoon;
+    font-size: 1.8em;
+    font-weight: bold;
+}
