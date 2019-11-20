@@ -4,7 +4,8 @@ import './App.css';
 import firebase from './Firebase';
 import 'antd/dist/antd.css';
 import { Button } from 'antd';
-
+import './css/app.css';
+import bgApp from './image/bgList.png';
 
 
 class App extends Component {
@@ -42,24 +43,31 @@ class App extends Component {
     this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
   }
 
+  // onChange() {
+  //   if(this.state.board.statusOrder == "เสร็จสมบูรณ์!") {
+
+  //   }
+  // }
+
   render(){
     const statusOrder = this.state.statusOrder;
-    let orderS;
+    let orderS,status1;
+    
     if(!statusOrder){
-      orderS=this.state.boards.map(board =>
-        <Button type="primary" href={`/show/${board.key}`}>{board.rand}</Button>
+      orderS = this.state.boards.map(board =>
+       <Button id="button" type="primary" href={`/show/${board.key}`} onChange={this.onChange}><span>{board.rand}</span></Button>
         )
     }else{
       orderS=this.state.boards.map(board =>
         <Button disabled type="primary">{board.rand}</Button>
         )
-    }    
+      }
+      
     return (
-    
+    <div class="bgApp" >
     <div className="App">
-      <div>
-      {orderS}
-      </div>
+      <div id="content">{orderS}</div>
+    </div>
     </div>
   );
 }
