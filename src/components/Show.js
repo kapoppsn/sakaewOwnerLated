@@ -3,6 +3,9 @@ import firebase from '../Firebase';
 import { Link } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import { Button, Descriptions, Badge, Popconfirm, message  } from 'antd';
+import { file } from '@babel/types';
+import { Document, Page } from 'react-pdf';
+ 
 
 const text = 'Are you sure to confirm this order?';
 
@@ -36,6 +39,10 @@ class Show extends Component {
       datePay: '',
       timePay: '',
       costPay: '',
+      image: null,
+      url: '',
+      url2: '',
+      progress: 0,
     };
   }
   componentDidMount() {
@@ -60,6 +67,8 @@ class Show extends Component {
           datePay: board.datePay,
           timePay: board.timePay,
           costPay: board.costPay,
+          url: board.url,
+          url2: board.url2,
           isLoading: false
         });
       } else {
@@ -70,7 +79,7 @@ class Show extends Component {
   onSubmit = (e) => {
     e.preventDefault()
 
-    const {name, size, amount, format, color, page, page2, tel, address, rand, statusOrder, datePay,timePay ,costPay } = this.state;
+    const {name, size, amount, format, color, page, page2, tel, address, rand, statusOrder, datePay,timePay ,costPay, url, url2 } = this.state;
 
     const updateRef = firebase.firestore().collection('boards').doc(this.state.key);
     updateRef.set({
@@ -88,6 +97,8 @@ class Show extends Component {
       datePay,
       timePay,
       costPay,
+      url,
+      url2,
     }).then((docRef) => {
       this.setState({
         key: '',
@@ -105,17 +116,22 @@ class Show extends Component {
         datePay: '',
         timePay: '',
         costPay: '',
+        url: '',
+        url2: '',
       });
       this.props.history.push("/show/"+this.props.match.params.id)
-      this.setState({
-        finishS: !this.state.finishS,
-        statusOrder: "0"
-    })
-    console.log("click");
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
     });
+    this.setState({
+      finishS: !this.state.finishS,
+      statusOrder: "0",
+      name: "statusOrder",
+      value: this.state.statusOrder,
+      onChange:()=> this.onChange
+  })
+  console.log("click");
   }
   onChange = (e) => {
     const state = this.state
@@ -130,6 +146,7 @@ class Show extends Component {
   toggleFinish() {
       this.setState({
         finishS: !this.state.finishS,
+        statusOrder: "0"
     })
     console.log("click");
   }
@@ -153,8 +170,8 @@ class Show extends Component {
       status1 = <Badge status="default" text="Waiting for confirm" />
       successBut = <Button onClick={this.toggleConfirm}>Confirm order</Button>
     }else if(confirmS){
-      status1 = <Badge status="processing" text="Doing the order" name="statusOrder" value={statusOrder} onChange={this.onSubmit}   onChange={this.onChange}/>
-      successBut = <div class="form-group"><button type="submit"  name="statusOrder" value={statusOrder} onClick={this.onSubmit}  onChange={this.onChange}>Finish order</button></div>
+      status1 = <Badge status="processing" text="Doing the order" />
+      successBut = <Button type="submit"  onClick={this.onSubmit}>Finish order</Button>
       if(finishS){
         status1 = <Badge status="success" text="Finish order!" />
       successBut = <Button disabled type="primary">Finish order {statusOrder}</Button>
@@ -174,6 +191,15 @@ class Show extends Component {
           <Descriptions.Item label="จำนวนหน้า">{this.state.board.amount}</Descriptions.Item>
           <Descriptions.Item label="สี">{this.state.board.color}</Descriptions.Item>
           <Descriptions.Item label="รูปแบบการเข้าเล่ม">{this.state.board.format}</Descriptions.Item>
+          <Descriptions.Item label="จำนวนเงิน">{this.state.board.costPay}</Descriptions.Item>
+          <Descriptions.Item label="วันที่โอน">{this.state.board.datePay}</Descriptions.Item>
+          <Descriptions.Item label="เวลาที่โอน">{this.state.board.timePay}</Descriptions.Item>
+          <Descriptions.Item label="เอกสาร">
+          <Button type="link" href={this.state.board.url}>Downlad</Button>
+        </Descriptions.Item>
+        <Descriptions.Item label="ใบเสร็จ">
+          <Button type="link" href={this.state.board.url2}>Downlad</Button>
+        </Descriptions.Item>
           {/* <Descriptions.Item label="Usage Time" span={2}>
             2019-04-24 18:00:00
           </Descriptions.Item> */}
