@@ -25,15 +25,24 @@ class EditStatus extends Component {
       page2: '',
       size: '',
       amount: '',
+      copy: '',
       color: '',
       format: '',
       address: '',
       tel:'',
       rand: '',
+      datePay: '',
+      timePay: '',
+      costPay: '',
+      image: null,
+      url: '',
+      url2: '',
+      progress: 0,
       value:'',
       checkWaiting: false,
       checkDoing: false,
       checkFinish: false,
+      checkRecieve: false,
     };
   }
 
@@ -50,12 +59,18 @@ class EditStatus extends Component {
           page2: board.page2,
           size: board.size,
           amount: board.amount,
+          copy: board.copy,
           color: board.color,
           format: board.format,
           tel: board.tel,
           address: board.address,
           rand: board.rand,
           statusOrder: board.statusOrder,
+          datePay: board.datePay,
+          timePay: board.timePay,
+          costPay: board.costPay,
+          url: board.url,
+          url2: board.url2,
           isLoading: false
         });
       } else {
@@ -73,7 +88,7 @@ class EditStatus extends Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-    const {name, size, amount, format, color, page, page2, tel, address, rand, statusOrder} = this.state;
+    const {name, size, amount, copy, format, color, page, page2, tel, address, rand, statusOrder, datePay,timePay ,costPay, url, url2} = this.state;
 
     const updateRef = firebase.firestore().collection('boards').doc(this.state.key);
     updateRef.set({
@@ -82,12 +97,18 @@ class EditStatus extends Component {
       page2,
       size,
       amount,
+      copy,
       color,
       format,
       tel,
       address,
       rand,
       statusOrder,
+      datePay,
+      timePay,
+      costPay,
+      url,
+      url2,
     }).then((docRef) => {
       this.setState({
         key: '',
@@ -102,6 +123,11 @@ class EditStatus extends Component {
         tel:'',
         rand: '',
         statusOrder: '',
+        datePay: '',
+        timePay: '',
+        costPay: '',
+        url: '',
+        url2: '',
       });
       this.props.history.push("/show/"+this.props.match.params.id)
     })
@@ -139,39 +165,57 @@ class EditStatus extends Component {
       checkFinish: !this.state.checkFinish,
   });
   }
+  toggleCheckRecieve() {
+    this.setState({
+      checkRecieve: !this.state.checkRecieve,
+  });
+  }
 
   render() {
     const statusOrder = this.state.statusOrder;
     const checkWaiting = this.state.checkWaiting;
     const checkDoing = this.state.checkDoing;
     const checkFinish = this.state.checkFinish;
+    const checkRecieve = this.state.checkRecieve;
     let status1,successBut,status2;
   
-    if(checkWaiting==true && checkDoing==false && checkFinish==false){
+    if(this.state.board.statusOrder=="รอการจัดทำ"){
       this.state.board.statusOrder = <Badge status="default" text="รอการจัดทำ" />
-      successBut = <div><input type="checkbox" name="statusOrder" value="รอการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckWaiting} checked/><text>รอการจัดทำ</text>
-                        <input disabled type="checkbox" name="statusOrder" value="อยู่ระหว่างการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckDoing}/> <text>อยู่ระหว่างการจัดทำ</text>
+      successBut = <div><input  disabled type="checkbox" name="statusOrder" value="รอการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckWaiting} checked/><text>รอการจัดทำ</text>
+                        <input  type="checkbox" name="statusOrder" value="อยู่ระหว่างการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckDoing}/> <text>อยู่ระหว่างการจัดทำ</text>
                         <input disabled type="checkbox" name="statusOrder" value="เสร็จสมบูรณ์!" onChange={this.onChange} onClick={this.toggleCheckFinish}/><text>เสร็จสมบูรณ์!</text>
+                        <input disabled type="checkbox" name="statusOrder" value="รับสินค้าแล้ว" onChange={this.onChange} onClick={this.toggleCheckFinish} /><text>รับสินค้าแล้ว</text>
                         <button name="statusOrder">เลือกสถานะ</button></div>
     }
-    else if(checkWaiting==false && checkDoing==true && checkFinish==false){
+    else if(this.state.board.statusOrder=="อยู่ระหว่างการจัดทำ"){
       this.state.board.statusOrder = <Badge status="processing" text="อยู่ระหว่างการจัดทำ" /> 
       successBut = <div><input disabled type="checkbox" name="statusOrder" value="รอการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckWaiting} /><text>รอการจัดทำ</text>
-                        <input type="checkbox" name="statusOrder" value="อยู่ระหว่างการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckDoing} checked/> <text>อยู่ระหว่างการจัดทำ</text>
-                        <input disabled type="checkbox" name="statusOrder" value="เสร็จสมบูรณ์!" onChange={this.onChange} onClick={this.toggleCheckFinish}/><text>เสร็จสมบูรณ์!</text>
+                        <input disabled type="checkbox" name="statusOrder" value="อยู่ระหว่างการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckDoing} checked/> <text>อยู่ระหว่างการจัดทำ</text>
+                        <input  type="checkbox" name="statusOrder" value="เสร็จสมบูรณ์!" onChange={this.onChange} onClick={this.toggleCheckFinish}/><text>เสร็จสมบูรณ์!</text>
+                        <input disabled type="checkbox" name="statusOrder" value="รับสินค้าแล้ว" onChange={this.onChange} onClick={this.toggleCheckFinish} /><text>รับสินค้าแล้ว</text>
                         <button name="statusOrder">เลือกสถานะ</button></div>
     }
-    else if (checkWaiting==false && checkDoing==false && checkFinish==true){
+    else if (this.state.board.statusOrder=="เสร็จสมบูรณ์!"){
       this.state.board.statusOrder = <Badge status="success" text="เสร็จสมบูรณ์!"/>
       successBut = <div><input disabled type="checkbox" name="statusOrder" value="รอการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckWaiting} /><text>รอการจัดทำ</text>
                         <input disabled type="checkbox" name="statusOrder" value="อยู่ระหว่างการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckDoing} /> <text>อยู่ระหว่างการจัดทำ</text>
-                        <input type="checkbox" name="statusOrder" value="เสร็จสมบูรณ์!" onChange={this.onChange} onClick={this.toggleCheckFinish} checked/><text>เสร็จสมบูรณ์!</text>
+                        <input disabled type="checkbox" name="statusOrder" value="เสร็จสมบูรณ์!" onChange={this.onChange} onClick={this.toggleCheckFinish} checked/><text>เสร็จสมบูรณ์!</text>
+                        <input type="checkbox" name="statusOrder" value="รับสินค้าแล้ว" onChange={this.onChange} onClick={this.toggleCheckFinish} /><text>รับสินค้าแล้ว</text>
                         <button name="statusOrder">เลือกสถานะ</button></div>
     }
-    else if (checkWaiting==false && checkDoing==false && checkFinish==false) {
+    else if (this.state.board.statusOrder=="รับสินค้าแล้ว"){
+      this.state.board.statusOrder = <Badge status="success" text="เสร็จสมบูรณ์!"/>
+      successBut = <div><input disabled type="checkbox" name="statusOrder" value="รอการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckWaiting} /><text>รอการจัดทำ</text>
+                        <input disabled type="checkbox" name="statusOrder" value="อยู่ระหว่างการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckDoing} /> <text>อยู่ระหว่างการจัดทำ</text>
+                        <input disabled type="checkbox" name="statusOrder" value="เสร็จสมบูรณ์!" onChange={this.onChange} onClick={this.toggleCheckFinish} checked/><text>เสร็จสมบูรณ์!</text>
+                        <input type="checkbox" name="statusOrder" value="รับสินค้าแล้ว" onChange={this.onChange} onClick={this.toggleCheckFinish} /><text>รับสินค้าแล้ว</text>
+                        <button name="statusOrder">เลือกสถานะ</button></div>
+    }
+    else if (this.state.board.statusOrder=="") {
       successBut = <div><input type="checkbox" name="statusOrder" value="รอการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckWaiting} /><text>รอการจัดทำ</text>
-                        <input type="checkbox" name="statusOrder" value="อยู่ระหว่างการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckDoing} /> <text>อยู่ระหว่างการจัดทำ</text>
-                        <input type="checkbox" name="statusOrder" value="เสร็จสมบูรณ์!" onChange={this.onChange} onClick={this.toggleCheckFinish} /><text>เสร็จสมบูรณ์!</text>
+                        <input disabled type="checkbox" name="statusOrder" value="อยู่ระหว่างการจัดทำ" onChange={this.onChange} onClick={this.toggleCheckDoing} /> <text>อยู่ระหว่างการจัดทำ</text>
+                        <input disabled type="checkbox" name="statusOrder" value="เสร็จสมบูรณ์!" onChange={this.onChange} onClick={this.toggleCheckFinish} /><text>เสร็จสมบูรณ์!</text>
+                        <input disabled type="checkbox" name="statusOrder" value="รับสินค้าแล้ว" onChange={this.onChange} onClick={this.toggleCheckFinish} /><text>รับสินค้าแล้ว</text>
                         <button name="statusOrder" disabled>เลือกสถานะ</button></div>
     }
 

@@ -5,6 +5,7 @@ import 'antd/dist/antd.css';
 import { Button, Descriptions, Badge, Popconfirm, message} from 'antd';
 import '../css/info.css';
 import bg from '../image/bgList.png';
+import NumberFormat from 'react-number-format';
 
 const text = 'Are you sure to confirm this order?';
 
@@ -33,6 +34,7 @@ class Show extends Component {
       page2: '',
       size: '',
       amount: '',
+      copy: '',
       color: '',
       format: '',
       address: '',
@@ -64,6 +66,7 @@ class Show extends Component {
           page2: board.page2,
           size: board.size,
           amount: board.amount,
+          copy: board.copy,
           color: board.color,
           format: board.format,
           tel: board.tel,
@@ -85,7 +88,7 @@ class Show extends Component {
   onSubmit = (e) => {
     e.preventDefault()
 
-    const {name, size, amount, format, color, page, page2, tel, address, rand, statusOrder, datePay,timePay ,costPay, url, url2 } = this.state;
+    const {name, size, amount, copy, format, color, page, page2, tel, address, rand, statusOrder, datePay,timePay ,costPay, url, url2 } = this.state;
 
     const updateRef = firebase.firestore().collection('boards').doc(this.state.key);
     updateRef.set({
@@ -94,6 +97,7 @@ class Show extends Component {
       page2,
       size,
       amount,
+      copy,
       color,
       format,
       tel,
@@ -192,8 +196,8 @@ class Show extends Component {
     const checkFinish = this.state.checkFinish;
     let status1,successBut,status2;
 
-    if(statusOrder=="เสร็จสมบูรณ์!") {
-      status1 = <Link id="edit" to={`/editstatus/${this.state.key}`} disabled class="btn btn-success">&nbsp;&nbsp;&nbsp;แก้ไขสถานะ</Link>
+    if(statusOrder=="รับสินค้าแล้ว"){
+      status1 =<Link id="edit" to={`/editstatus/${this.state.key}`} disabled class="btn btn-success">&nbsp;&nbsp;&nbsp;แก้ไขสถานะ</Link>
     }
     else {
       status1 = <Link id="edit" to={`/editstatus/${this.state.key}`} class="btn btn-success">&nbsp;&nbsp;&nbsp;แก้ไขสถานะ</Link>
@@ -210,11 +214,12 @@ class Show extends Component {
           <Descriptions.Item label="หมายเลขสั่งซื้อ">{this.state.board.rand}</Descriptions.Item>
           <Descriptions.Item label="ชื่อ">{this.state.board.name}</Descriptions.Item>
           <Descriptions.Item label="ขนาดกระดาษ">{this.state.board.size}</Descriptions.Item>
-    <Descriptions.Item label="หน้าที่">{this.state.board.page}-{this.state.board.page2}</Descriptions.Item>
+          <Descriptions.Item label="หน้าที่">{this.state.board.page}-{this.state.board.page2}</Descriptions.Item>
           <Descriptions.Item label="จำนวนหน้า">{this.state.board.amount}</Descriptions.Item>
+          <Descriptions.Item label="จำนวนสำเนา">{this.state.board.copy}</Descriptions.Item>
           <Descriptions.Item label="สี">{this.state.board.color}</Descriptions.Item>
           <Descriptions.Item label="รูปแบบการเข้าเล่ม">{this.state.board.format}</Descriptions.Item>
-          <Descriptions.Item label="จำนวนเงิน">{this.state.board.costPay}</Descriptions.Item>
+          <Descriptions.Item label="จำนวนเงิน"><NumberFormat value={this.state.board.costPay} displayType={'text'} thousandSeparator={true} /></Descriptions.Item>
           <Descriptions.Item label="วันที่โอน">{this.state.board.datePay}</Descriptions.Item>
           <Descriptions.Item label="เวลาที่โอน">{this.state.board.timePay}</Descriptions.Item>
           <Descriptions.Item label="เอกสาร"><Button type="link" href={this.state.board.url}>Download</Button></Descriptions.Item>

@@ -23,6 +23,20 @@
     cursor: pointer;
     margin: 5px;
 }
+#buttonS {
+  display: inline-block;
+  border-radius: 2pc;
+  background-color: rgb(172, 168, 168);
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 26px;
+  padding: 35px;
+  width: 200px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
 #button span {
     cursor: pointer;
     display: inline-block;

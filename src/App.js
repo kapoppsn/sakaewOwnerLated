@@ -14,24 +14,68 @@ class App extends Component {
     this.ref = firebase.firestore().collection('boards');
     this.unsubscribe = null;
     this.state = {
-      boards: []
+      boards: [],
+      name: '',
+      page: '',
+      page2: '',
+      size: '',
+      amount: '',
+      copy: '',
+      color: '',
+      format: '',
+      address: '',
+      tel:'',
+      rand: '',
+      datePay: '',
+      timePay: '',
+      costPay: '',
+      image: null,
+      url: '',
+      url2: '',
+      progress: 0,
+      value:'',
     };
   }
   onCollectionUpdate = (querySnapshot) => {
     const boards = [];
     querySnapshot.forEach((doc) => {
-      const { name, amount, size, format, color, page, statusOrder, rand } = doc.data();
+      const { name,
+        page,
+        page2,
+        size,
+        amount,
+        copy,
+        color,
+        format,
+        tel,
+        address,
+        rand,
+        statusOrder,
+        datePay,
+        timePay,
+        costPay,
+        url,
+        url2, } = doc.data();
       boards.push({
         key: doc.id,
         doc, // DocumentSnapshot
         name,
-        page,
-        amount,
-        size,
-        color,
-        format,
-        statusOrder,
-        rand
+      page,
+      page2,
+      size,
+      amount,
+      copy,
+      color,
+      format,
+      tel,
+      address,
+      rand,
+      statusOrder,
+      datePay,
+      timePay,
+      costPay,
+      url,
+      url2,
       });
     });
     this.setState({
@@ -53,15 +97,18 @@ class App extends Component {
     const statusOrder = this.state.statusOrder;
     let orderS,status1;
     
-    if(!statusOrder){
-      orderS = this.state.boards.map(board =>
-       <Button id="button" type="primary" href={`/show/${board.key}`} onChange={this.onChange}><span>{board.rand}</span></Button>
-        )
-    }else{
-      orderS=this.state.boards.map(board =>
-        <Button disabled type="primary">{board.rand}</Button>
-        )
+      orderS = this.state.boards.map(board =>{
+        if(board.statusOrder=="รับสินค้าแล้ว")
+          return null
+        else
+          return <Button id="button" type="primary" href={`/show/${board.key}`} onChange={this.onChange}><span>{board.rand}</span></Button>
       }
+        );
+    // }else{
+    //   orderS=this.state.boards.map(board =>
+    //     <Button disabled type="primary">{board.rand}</Button>
+    //     )
+    //   }
       
     return (
     <div class="bgApp" >

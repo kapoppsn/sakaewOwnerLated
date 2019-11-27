@@ -11,12 +11,11 @@
 }
 #table{
     width: 70%;
-    transform: translate(23%, 50%);
-    -webkit-transform: translate(23%, 50%);
+    transform: translate(23%, 25%);
+    -webkit-transform: translate(23%, 25%);
     -ms-transform: translate(-50%, -50%);
     font-weight: bolder;
     border: 4px double #CFBCA6 ;
-    font-family: 'Rock Salt', cursive;
 }
 #btCon{
     position: absolute;
